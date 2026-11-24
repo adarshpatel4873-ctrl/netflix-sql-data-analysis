@@ -1,0 +1,545 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Netflix Data Analysis using SQL">
+<title>Netflix Data Analysis | SQL Portfolio</title>
+
+<style>
+:root {
+  --red: #e50914;
+  --bg: #090b10;
+  --panel: #141821;
+  --text: #f5f6f8;
+  --muted: #a8afbd;
+  --line: #2b3240;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  width: min(1100px, 92%);
+  margin: auto;
+}
+
+nav {
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+}
+
+.logo {
+  font-size: 23px;
+  font-weight: 900;
+}
+
+.logo span { color: var(--red); }
+
+.nav-links {
+  display: flex;
+  gap: 22px;
+  color: var(--muted);
+}
+
+.nav-links a:hover { color: white; }
+
+.hero {
+  padding: 85px 0 65px;
+  background:
+    radial-gradient(ellipse at 80% 10%, #e5091433, transparent 45%),
+    linear-gradient(135deg, #10141d, #090b10);
+}
+
+.tagline {
+  color: #ff7379;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: clamp(42px, 7vw, 80px);
+  line-height: 1.05;
+  margin: 20px 0;
+}
+
+.red { color: var(--red); }
+
+.hero p {
+  max-width: 680px;
+  color: var(--muted);
+  font-size: 18px;
+}
+
+.buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-weight: bold;
+  transition: .2s;
+}
+
+.btn.primary {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  opacity: .85;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-top: 45px;
+}
+
+.stat, .card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.stat strong {
+  display: block;
+  font-size: 30px;
+}
+
+.stat span { color: var(--muted); }
+
+section { padding: 65px 0; }
+
+.section-label {
+  color: #ff7379;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+h2 {
+  font-size: 32px;
+  margin: 8px 0 15px;
+}
+
+.intro {
+  color: var(--muted);
+  max-width: 720px;
+  margin-bottom: 28px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.card h3 { margin-bottom: 10px; }
+
+.card p {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.dark-section {
+  background: #0e121a;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.questions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.question {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.question span {
+  color: var(--red);
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.schema {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.field {
+  background: #1b202b;
+  border: 1px solid var(--line);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.field b { color: #ff858a; }
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.skill {
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  background: #1b202b;
+  font-size: 14px;
+}
+
+.steps {
+  padding-left: 20px;
+  color: var(--muted);
+}
+
+.steps li { margin: 10px 0; }
+
+.notice {
+  margin-top: 25px;
+  padding: 18px;
+  background: #241e12;
+  border: 1px solid #725b2a;
+  border-radius: 10px;
+  color: #f3dfad;
+  font-size: 14px;
+}
+
+footer {
+  padding: 30px 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+@media(max-width: 750px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .grid, .questions { grid-template-columns: 1fr; }
+  .schema { grid-template-columns: repeat(2, 1fr); }
+  .nav-links { gap: 10px; font-size: 12px; }
+}
+
+@media(max-width: 430px) {
+  .nav-links a:nth-child(2) { display: none; }
+  .schema { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<header class="container">
+  <nav>
+    <a href="#home" class="logo">
+      <span>NETFLIX</span> / SQL PROJECT
+    </a>
+
+    <div class="nav-links">
+      <a href="#overview">Overview</a>
+      <a href="#analysis">Analysis</a>
+      <a href="#dataset">Dataset</a>
+      <a href="#files">Files</a>
+    </div>
+  </nav>
+</header>
+
+<main id="home">
+
+  <!-- HERO SECTION -->
+  <div class="hero">
+    <div class="container">
+      <div class="tagline">● DATA ANALYTICS PORTFOLIO PROJECT</div>
+
+      <h1>
+        NETFLIX<br>
+        <span class="red">DATA ANALYSIS</span>
+      </h1>
+
+      <p>
+        An exploratory analysis of Netflix movies and TV shows
+        using SQL. Exploring content distribution, release trends,
+        ratings, genres, countries and more.
+      </p>
+
+      <div class="buttons">
+        <a class="btn primary" href="netflix_analysis.sql" download>
+          Download SQL Script ↓
+        </a>
+
+        <a class="btn" href="netflix.csv" download>
+          Download Dataset ↓
+        </a>
+
+        <a class="btn" href="#analysis">
+          Explore Project
+        </a>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <strong>8,807</strong>
+          <span>Total Titles</span>
+        </div>
+
+        <div class="stat">
+          <strong>6,131</strong>
+          <span>Movies</span>
+        </div>
+
+        <div class="stat">
+          <strong>2,676</strong>
+          <span>TV Shows</span>
+        </div>
+
+        <div class="stat">
+          <strong>12</strong>
+          <span>Dataset Columns</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <section id="overview" class="container">
+    <div class="section-label">01 / PROJECT OVERVIEW</div>
+    <h2>About This Project</h2>
+
+    <p class="intro">
+      The objective of this project is to explore Netflix's
+      catalogue using SQL and answer analytical questions
+      about movies and television shows.
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <div class="icon">🎯</div>
+        <h3>Objective</h3>
+        <p>
+          Analyze Netflix content and explore patterns in
+          content types, release years, ratings, runtime,
+          countries and genres.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="icon">🛠️</div>
+        <h3>Tools Used</h3>
+        <p>
+          SQL, MySQL concepts, aggregate functions,
+          common table expressions, string functions
+          and window functions.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="icon">📊</div>
+        <h3>Dataset</h3>
+        <p>
+          Netflix titles dataset containing 8,807 records
+          and 12 columns with movie and TV show information.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SQL ANALYSIS -->
+  <section id="analysis" class="dark-section">
+    <div class="container">
+      <div class="section-label">02 / SQL ANALYSIS</div>
+      <h2>Questions Explored</h2>
+
+      <p class="intro">
+        The SQL script covers these analytical questions.
+      </p>
+
+      <div class="questions">
+        <div class="question"><span>01</span> Count Movies vs TV Shows</div>
+        <div class="question"><span>02</span> Movies Released in 2020</div>
+        <div class="question"><span>03</span> Identify the Longest Movie</div>
+        <div class="question"><span>04</span> TV Shows with More Than 5 Seasons</div>
+        <div class="question"><span>05</span> Content Added in the Last 10 Years</div>
+        <div class="question"><span>06</span> Search Content by Director</div>
+        <div class="question"><span>07</span> Top 5 Release Years for Indian Content</div>
+        <div class="question"><span>08</span> Find Documentary Movies</div>
+        <div class="question"><span>09</span> Content Without a Director</div>
+        <div class="question"><span>10</span> Categorize Content Using Keywords</div>
+        <div class="question"><span>11</span> Most Frequent Ratings by Type</div>
+        <div class="question"><span>12</span> Explore Actors, Countries and Genres</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DATASET -->
+  <section id="dataset" class="container">
+    <div class="section-label">03 / DATASET STRUCTURE</div>
+    <h2>Dataset Information</h2>
+
+    <p class="intro">
+      The dataset contains 12 columns describing
+      Netflix movies and television shows.
+    </p>
+
+    <div class="schema">
+      <div class="field"><b>show_id</b> — Unique ID</div>
+      <div class="field"><b>type</b> — Movie / TV Show</div>
+      <div class="field"><b>title</b> — Title Name</div>
+      <div class="field"><b>director</b> — Director</div>
+      <div class="field"><b>cast</b> — Cast Members</div>
+      <div class="field"><b>country</b> — Country</div>
+      <div class="field"><b>date_added</b> — Date Added</div>
+      <div class="field"><b>release_year</b> — Release Year</div>
+      <div class="field"><b>rating</b> — Content Rating</div>
+      <div class="field"><b>duration</b> — Runtime / Seasons</div>
+      <div class="field"><b>listed_in</b> — Genres</div>
+      <div class="field"><b>description</b> — Description</div>
+    </div>
+  </section>
+
+  <!-- SKILLS AND SETUP -->
+  <section class="dark-section">
+    <div class="container grid">
+
+      <div>
+        <div class="section-label">04 / SKILLS</div>
+        <h2>SQL Concepts</h2>
+
+        <div class="skills">
+          <span class="skill">SELECT</span>
+          <span class="skill">WHERE</span>
+          <span class="skill">GROUP BY</span>
+          <span class="skill">ORDER BY</span>
+          <span class="skill">Aggregate Functions</span>
+          <span class="skill">String Functions</span>
+          <span class="skill">CAST</span>
+          <span class="skill">CTE</span>
+          <span class="skill">CASE WHEN</span>
+          <span class="skill">Window Functions</span>
+          <span class="skill">DENSE_RANK</span>
+          <span class="skill">Date Functions</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">05 / GETTING STARTED</div>
+        <h2>Run the Project</h2>
+
+        <ol class="steps">
+          <li>Download the CSV dataset and SQL script.</li>
+          <li>Create the database and table.</li>
+          <li>Import the Netflix CSV into the table.</li>
+          <li>Execute the SQL queries.</li>
+          <li>Analyze the query results.</li>
+        </ol>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FILES -->
+  <section id="files" class="container">
+    <div class="section-label">06 / PROJECT FILES</div>
+    <h2>Project Resources</h2>
+
+    <p class="intro">
+      Access the SQL script and dataset used in this project.
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <div class="icon">📄</div>
+        <h3>SQL Analysis</h3>
+        <p>Database setup and SQL analytical queries.</p>
+        <br>
+        <a class="btn" href="netflix_analysis.sql" download>
+          Download SQL →
+        </a>
+      </div>
+
+      <div class="card">
+        <div class="icon">📊</div>
+        <h3>Netflix Dataset</h3>
+        <p>CSV dataset containing 8,807 Netflix records.</p>
+        <br>
+        <a class="btn" href="netflix.csv" download>
+          Download CSV →
+        </a>
+      </div>
+
+      <div class="card">
+        <div class="icon">🌐</div>
+        <h3>Project Webpage</h3>
+        <p>Explore the project overview and resources.</p>
+        <br>
+        <a class="btn" href="#home">
+          Back to Top ↑
+        </a>
+      </div>
+    </div>
+
+    <div class="notice">
+      <strong>SQL Compatibility Note:</strong>
+      The supplied SQL script mixes MySQL and PostgreSQL syntax.
+      Some queries also use the column name "casting", while
+      the CSV column is named "cast" and the table definition
+      uses "cast_members". Align the column names and SQL
+      dialect before running the entire script.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <strong>Netflix Data Analysis</strong>
+    <p>SQL Portfolio Project | Data Analytics</p>
+  </div>
+</footer>
+
+</body>
+</html>
