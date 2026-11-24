@@ -1,4 +1,4 @@
--- Netflix project MSQL
+-- Netflix project MSQLhttps://github.com/adarshpatel4873-ctrl/netflix-sql-data-analysis/edit/main/3rd%20project%20netflix.sql
 -- queries left 2,4
 -- creating database of Netflix
 create database if not exists netflix_db;
